@@ -58,10 +58,12 @@ body {
   background: #c3e3e2;
   align-items: center;
   padding-left: 24px;
-
 }
 .quizBox_option:hover{
     background: #289ab5;
+    box-shadow: 9px 10px 27px 2px rgba(0, 0, 0, 0.43);
+  -webkit-box-shadow: 9px 10px 27px 2px rgba(0, 0, 0, 0.43);
+  -moz-box-shadow: 9px 10px 27px 2px rgba(0, 0, 0, 0.43);
 }
 .quizBox_icon {
   transform: rotate(90deg);
