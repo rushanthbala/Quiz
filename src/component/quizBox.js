@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Questions from "../api/question.json";
 import M from "materialize-css";
 import "./quizBox.css";
@@ -8,6 +8,7 @@ import TimerIcon from "@material-ui/icons/Timer";
 import CorrectQuestionSound from "../assect/audio files/correct-answer.mp3";
 import WrongQuestionSound from "../assect/audio files/wrong-answer.mp3";
 import ButtonQuestionSound from "../assect/audio files/button-sound.mp3";
+import { random } from "lodash";
 
 export default function Quiz() {
   const [question, setQuestion] = useState(Questions);
@@ -23,19 +24,22 @@ export default function Quiz() {
   const [WrongAnswer, setWrongAnswer] = useState(0);
 
   const [Hint, setHint] = useState(5);
-  const [FityFity, setFityFity] = useState(2);
-  // const [UseFityFity, setUseFityFity] = useState(0);
+  const [fityFity, setFityFity] = useState(2);
+  const [useFityFity, setUseFityFity] = useState(true);
   // const [Time, setTime] = useState({});
-  const [priviosRandomNo, setPriviosRandomNo] = useState([])
+  const [priviosRandomNo, setPriviosRandomNo] = useState([]);
   const onButtonClick = (e) => {
     showHiddenOption();
     switch (e.target.id) {
       case "next":
-        let nextQuestion = currentQuestionIndex + 1;
-        setCurrentQuestionIndex(nextQuestion);
-        setCurrentQuestion(question[nextQuestion]);
-        setAnswer(question[nextQuestion].answer);
-        setNumberQuestion(numberQuestion + 1);
+        if (currentQuestionIndex < 14) {
+          let nextQuestion = currentQuestionIndex + 1;
+          setCurrentQuestionIndex(nextQuestion);
+          setCurrentQuestion(question[nextQuestion]);
+          setAnswer(question[nextQuestion].answer);
+          setNumberQuestion(numberQuestion + 1);
+        }
+      
         break;
       case "previos":
         previosQuestion();
@@ -67,7 +71,7 @@ export default function Quiz() {
   const onHandingClick = (e) => {
     showHiddenOption();
 
-      if (e.target.innerHTML === answer) {
+    if (e.target.innerHTML === answer) {
       setTimeout(() => {
         document.getElementById("correctQuestionSound").play();
       }, 500);
@@ -108,36 +112,90 @@ export default function Quiz() {
   const onHintClick = () => {
     if (Hint > 0) {
       const options = Array.from(document.querySelectorAll(".quizBox_option"));
-    let correctAnswerIndexNo;
-    options.map((option, i) => {
-      if (option.innerHTML.toLocaleLowerCase() === answer.toLocaleLowerCase()) {
-        correctAnswerIndexNo = i;
-        console.log(correctAnswerIndexNo);
+      let correctAnswerIndexNo;
+      options.map((option, i) => {
+        if (
+          option.innerHTML.toLocaleLowerCase() === answer.toLocaleLowerCase()
+        ) {
+          correctAnswerIndexNo = i;
+          console.log(correctAnswerIndexNo);
+        }
+      });
+      while (true) {
+        const randomNo = Math.round(Math.random() * 3);
+        if (
+          randomNo !== correctAnswerIndexNo &&
+          !priviosRandomNo.includes(randomNo)
+        ) {
+          options.map((option, i) => {
+            if (i === randomNo) {
+              option.style.visibility = "hidden";
+              console.log("claSS ");
+              setHint(Hint - 1);
+              setPriviosRandomNo(priviosRandomNo.concat(randomNo));
+            }
+          });
+          break;
+        }
+        if (priviosRandomNo.length >= 3) {
+          break;
+        }
       }
-    });
-    while (true) {
-      const randomNo = Math.round(Math.random() * 3);
-      if (randomNo !== correctAnswerIndexNo && !(priviosRandomNo.includes(randomNo)) ) {
-        options.map((option, i) => {
-          if (i === randomNo) {
-            option.style.visibility = "hidden";
-            console.log("claSS ");
-            setHint(Hint-1)
-            setPriviosRandomNo(priviosRandomNo.concat(randomNo))
-          }
-        });
-      break;
-
-      }
-      if (priviosRandomNo.length >= 3 ) {
-        break;
-      }
-    }
     }
   };
 
-  const showHiddenOption = ()=>{
-    setPriviosRandomNo([])
+  const onFiftyClick = () => {
+    if (fityFity > 0 && useFityFity === true ) {
+      const options = Array.from(document.querySelectorAll(".quizBox_option"));
+      let correctAnswerIndexNo;
+      let randomNos = [];
+      options.map((option, i) => {
+        if (
+          option.innerHTML.toLocaleLowerCase() === answer.toLocaleLowerCase()
+        ) {
+          correctAnswerIndexNo = i;
+        }
+      });
+      let count = 0;
+      do {
+        let randomNo = Math.round(Math.random() * 3);
+        if (randomNo !== correctAnswerIndexNo) {
+          if (
+            randomNos.length < 2 &&
+            !randomNos.includes(randomNo) &&
+            !randomNos.includes(correctAnswerIndexNo)
+          ) {
+            randomNos.push(randomNo);
+            count++;
+          } else {
+            while (true) {
+              let newRandomNo = Math.round(Math.random() * 3);
+              if (
+                !randomNos.includes(newRandomNo) &&
+                !randomNos.includes(correctAnswerIndexNo)
+              ) {
+                console.log('qsdw');
+                randomNos.push(newRandomNo);
+                count++;
+                break;
+              }
+            }
+          }
+        }
+      } while (count < 2);
+      options.map((option, i) => {
+        if (randomNos.includes(i)) {
+          option.style.visibility = "hidden";
+          setFityFity(fityFity-1)
+          setUseFityFity(false)
+          // setPriviosRandomNo(priviosRandomNo.concat(randomNo))
+        }
+      });
+    }
+  };
+  const showHiddenOption = () => {
+    setPriviosRandomNo([]);
+    setUseFityFity(true)
     const options = Array.from(document.querySelectorAll(".quizBox_option"));
     options.map((option, i) => {
       option.style.visibility = "visible";
@@ -149,7 +207,7 @@ export default function Quiz() {
       //   // console.log(correctAnswerIndexNo);
       // }
     });
-  }
+  };
   return (
     <div className="container">
       <div>
@@ -158,12 +216,12 @@ export default function Quiz() {
         <audio id="buttonQuestionSound" src={ButtonQuestionSound}></audio>
         <div className="quizBox_container">
           <div className="quizBox_icon_div">
-            <p className="quizBox_ion">
+            <p onClick={onFiftyClick}>
               <span>
                 {/* //fifty fity icon */}
                 <Brightness4Icon htmlColor="green" />
               </span>
-              <span className="quizBox_hint">{FityFity}</span>
+              <span className="quizBox_hint">{fityFity}</span>
             </p>
             <p onClick={onHintClick}>
               <span>
