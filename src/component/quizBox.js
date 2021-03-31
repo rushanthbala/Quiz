@@ -9,7 +9,8 @@ import CorrectQuestionSound from "../assect/audio files/correct-answer.mp3";
 import WrongQuestionSound from "../assect/audio files/wrong-answer.mp3";
 import ButtonQuestionSound from "../assect/audio files/button-sound.mp3";
 import { random } from "lodash";
-
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import RenderTime from './function/rederTime'
 export default function Quiz() {
   const [question, setQuestion] = useState(Questions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -39,7 +40,7 @@ export default function Quiz() {
           setAnswer(question[nextQuestion].answer);
           setNumberQuestion(numberQuestion + 1);
         }
-      
+
         break;
       case "previos":
         previosQuestion();
@@ -106,8 +107,6 @@ export default function Quiz() {
       displayLength: 1500,
     }),
     setWrongAnswer(wrongAnswer + 1)
-    // setNumberOfAnswerDo(numberOfAnswerDo + 1),
-    // console.log(currentQuestionIndex)
   );
   const onHintClick = () => {
     if (Hint > 0) {
@@ -145,7 +144,7 @@ export default function Quiz() {
   };
 
   const onFiftyClick = () => {
-    if (fityFity > 0 && useFityFity === true ) {
+    if (fityFity > 0 && useFityFity === true) {
       const options = Array.from(document.querySelectorAll(".quizBox_option"));
       let correctAnswerIndexNo;
       let randomNos = [];
@@ -174,7 +173,7 @@ export default function Quiz() {
                 !randomNos.includes(newRandomNo) &&
                 !randomNos.includes(correctAnswerIndexNo)
               ) {
-                console.log('qsdw');
+                console.log("qsdw");
                 randomNos.push(newRandomNo);
                 count++;
                 break;
@@ -186,28 +185,23 @@ export default function Quiz() {
       options.map((option, i) => {
         if (randomNos.includes(i)) {
           option.style.visibility = "hidden";
-          setFityFity(fityFity-1)
-          setUseFityFity(false)
-          // setPriviosRandomNo(priviosRandomNo.concat(randomNo))
+          setFityFity(fityFity - 1);
+          setUseFityFity(false);
         }
       });
     }
   };
   const showHiddenOption = () => {
     setPriviosRandomNo([]);
-    setUseFityFity(true)
+    setUseFityFity(true);
     const options = Array.from(document.querySelectorAll(".quizBox_option"));
     options.map((option, i) => {
       option.style.visibility = "visible";
-
-      // if (option.innerHTML.toLocaleLowerCase() === answer.toLocaleLowerCase()) {
-      //   console.log(123456);
-
-      //   // correctAnswerIndexNo = i;
-      //   // console.log(correctAnswerIndexNo);
-      // }
     });
   };
+  const onTimeOut = () =>{
+    alert('done ')
+  }
   return (
     <div className="container">
       <div>
@@ -223,6 +217,17 @@ export default function Quiz() {
               </span>
               <span className="quizBox_hint">{fityFity}</span>
             </p>
+            <CountdownCircleTimer
+              isPlaying
+              duration={100}
+              colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
+              onComplete={onTimeOut}
+              size='120'
+              strokeWidth='4'
+            >
+              <RenderTime/>
+              {/* {renderTime} */}
+            </CountdownCircleTimer>
             <p onClick={onHintClick}>
               <span>
                 {/* hint icon */}
@@ -243,7 +248,6 @@ export default function Quiz() {
               <span className="quizBox_hint">2.55</span>
             </p>
           </div>
-          {/* <div></div> */}
           <h2 className="quizBox_question">{currentQuestion.question}</h2>
           <div className="quizBox_answer">
             <div className="quizBox_answer_left">
