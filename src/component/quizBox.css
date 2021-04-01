@@ -1,17 +1,26 @@
+@media screen and (min-width: 480px) {
+  .quizBox_container {
+    margin-top: 150px !important;
+    /* background-color: green !important; */
+  }
+  /* div.quizBox_container p{
+    margin: 10px !important; 
+  } */
+}
 body {
   background-image: url("https://www.itl.cat/pngfile/big/298-2982444_backgrounds-for-your-computer-or-presentation-planwallpapercom-white.jpg");
   background-repeat: no-repeat;
   background-color: #cccccc;
 }
 .quizBox_container {
-    padding: 10px;
+  padding: 10px;
   background-color: antiquewhite;
   display: flex;
   justify-content: center;
   align-items: center;
   max-width: 900px;
   margin: 0 auto;
-  margin-top: 150px;
+  margin-top: 40px;
   flex-direction: column;
   background: #9cd5e4;
   background-repeat: no-repeat;
@@ -37,6 +46,7 @@ body {
   padding: 10px;
   flex-direction: column;
   padding-left: 20px;
+  /* background-color: red; */
 }
 .quizBox_answer_left {
   display: flex;
@@ -58,6 +68,7 @@ body {
   background: #c3e3e2;
   align-items: center;
   padding-left: 24px;
+  margin: 4px;
 }
 .quizBox_option:hover{
     background: #289ab5;
@@ -85,4 +96,5 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  margin-top: 2;
 }
