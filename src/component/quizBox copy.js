@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import ReactDOM from 'react-dom';
 import Questions from "../api/question.json";
 import M from "materialize-css";
 import "./quizBox.css";
@@ -13,15 +14,41 @@ import RenderTime from "./function/rederTime";
 import AlertResult from "./function/resultAlert";
 import Fade from "react-reveal/Fade";
 import useSound from "use-sound";
+import Countdown from "react-countdown";
+import axios from 'axios';
 
 export default function Quiz() {
-  const [subject] = useState(Questions.science);
+  useEffect(() => {
+    fetchData();
+    console.log(subject);
+  }, []);
+  const fetchData=(async () => {
+    const res = await axios(
+      'https://hn.algolia.com/api/v1/search?query=redux',
+    );
+    res.json()
+        .then((res) => setSubject(res))
+        .catch((err) => console.log(err));
+      console.log(res);
+  });
+ 
+
+const initialState = {
+  // question:[],
+  currentQuestionIndex:0,
+  currentQuestion:[],
+  answer:''
+}
+const [state, setstate] = useState(initialState)
+const{ currentQuestionIndex,currentQuestion,answer} =  state
+  // const {}
+  const [subject,setSubject] = useState({});
   const [question] = useState(subject);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(
-    question[currentQuestionIndex]
-  );
-  const [answer, setAnswer] = useState(question[currentQuestionIndex].answer);
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // const [currentQuestion, setCurrentQuestion] = useState(
+    // question[currentQuestionIndex]
+  // );
+  // const [answer, setAnswer] = useState(question[currentQuestionIndex].answer);
   const [numberQuestion, setNumberQuestion] = useState(0);
   const [numberOfAnswerDo, setNumberOfAnswerDo] = useState(0);
   const [score, setScore] = useState(0);
@@ -37,44 +64,44 @@ export default function Quiz() {
   const [clickValue, setClickValue] = useState(0);
   const [correctQuestionSound] = useSound(CorrectQuestionSound);
   const [wrongQuestionSound] = useSound(WrongQuestionSound);
-  // const [buttonQuestionSound] = useSound(ButtonQuestionSound);
+  const [buttonQuestionSound] = useSound(ButtonQuestionSound);
 
-  // const onButtonClick = (e) => {
-  //   renderResultAlert();
-  //   showHiddenOption();
-  //   switch (e.target.id) {
-  //     case "next":
-  //       if (currentQuestionIndex < 14) {
-  //         let nextQuestion = currentQuestionIndex + 1;
-  //         setCurrentQuestionIndex(nextQuestion);
-  //         setCurrentQuestion(question[nextQuestion]);
-  //         setAnswer(question[nextQuestion].answer);
-  //         setNumberQuestion(numberQuestion + 1);
-  //       }
+  const onButtonClick = (e) => {
+    renderResultAlert();
+    showHiddenOption();
+    switch (e.target.id) {
+      case "next":
+        if (currentQuestionIndex < 14) {
+          let nextQuestion = currentQuestionIndex + 1;
+          setCurrentQuestionIndex(nextQuestion);
+          setCurrentQuestion(question[nextQuestion]);
+          setAnswer(question[nextQuestion].answer);
+          setNumberQuestion(numberQuestion + 1);
+        }
 
-  //       break;
-  //     case "previos":
-  //       previosQuestion();
-  //       break;
+        break;
+      case "previos":
+        previosQuestion();
+        break;
 
-  //     default:
-  //       console.log(currentQuestion);
+      default:
+        console.log(currentQuestion);
 
-  //       break;
-  //   }
-  //   buttonQuestionSound();
-  // };
-  // const previosQuestion = () => {
-  //   if (currentQuestionIndex === 0) {
-  //     alert("no privou");
-  //   } else {
-  //     let previosQuestion = currentQuestionIndex - 1;
-  //     setCurrentQuestionIndex(previosQuestion);
-  //     setCurrentQuestion(question[previosQuestion]);
-  //     setAnswer(question[previosQuestion].answer);
-  //     setNumberQuestion(numberQuestion + 1);
-  //   }
-  // };
+        break;
+    }
+    buttonQuestionSound();
+  };
+  const previosQuestion = () => {
+    if (currentQuestionIndex === 0) {
+      alert("no privou");
+    } else {
+      let previosQuestion = currentQuestionIndex - 1;
+      setCurrentQuestionIndex(previosQuestion);
+      setCurrentQuestion(question[previosQuestion]);
+      setAnswer(question[previosQuestion].answer);
+      setNumberQuestion(numberQuestion + 1);
+    }
+  };
   const onHandingClick = (e) => {
     setClickValue(clickValue + 1);
     var nextQuestion = currentQuestionIndex + 1;
@@ -103,10 +130,23 @@ export default function Quiz() {
       setNumberOfAnswerDo(numberOfAnswerDo + 1);
     }
   };
+  const onHandingClickNext = (e) => {
+    console.log(currentQuestionIndex,'currentQuestionIndex');
+    setClickValue(clickValue + 1);
+    var nextQuestion = currentQuestionIndex +1;
+    showHiddenOption();
+    console.log(nextQuestion, "nextQuestion");
+      setCurrentQuestionIndex(nextQuestion);
+      setCurrentQuestion(question[nextQuestion]);
+      setAnswer(question[nextQuestion].answer);
+      setNumberQuestion(numberQuestion + 1);
+      setNumberOfAnswerDo(numberOfAnswerDo + 1);
+    
+  };
   const correctAnswer = (answerOption) => {
     M.toast({
-      html: "Correct ",
-      classes: "rounded toast-correct-answer",
+      html: "Correct Answer",
+      classes: "rounded",
     });
     setScore(score + 1);
     setNoOfCorrectAnswer(noOfCorrectAnswer + 1);
@@ -117,9 +157,8 @@ export default function Quiz() {
     setWrongAnswers(WrongAnswers + 1),
     M.toast({
       html: "Wrong Answer",
-      classes: "rounded  toast-wrong-answer",
+      classes: "rounded",
       displayLength: 1500,
-      // outDuration:0
     })
   );
   const onHintClick = () => {
@@ -213,6 +252,9 @@ export default function Quiz() {
       option.style.visibility = "visible";
     });
   };
+  const onTimeOut = () => {
+    alert("done ");
+  };
   const renderResultAlert = () => {
     if (ifTimesOut) {
       if (clickValue < 15) {
@@ -229,8 +271,50 @@ export default function Quiz() {
       }
     }
   };
- 
- 
+  const setIfTimesOuts = () => {
+    console.log("sdsd");
+    return (
+<div>d</div>
+      // <AlertResult
+      //   isResultAlert={false}
+      //   NoOfCorrectAnswer={noOfCorrectAnswer}
+      //   noOfUseFiftyFity={noOfUseFiftyFity}
+      //   noOfUseHint={noOfUseHint}
+      // />
+    );
+  };
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    // let nextQuestion = currentQuestionIndex + 1
+    if (completed) {
+      console.log(122);
+    console.log(currentQuestionIndex,'currentQuestionIndex');
+      // onHandingClick()
+      // alert('next Quiz')
+      onHandingClickNext(); 
+
+      return (
+        // <AlertResult
+        //   isResultAlert={true}
+        //   NoOfCorrectAnswer={noOfCorrectAnswer}
+        //   noOfUseFiftyFity={noOfUseFiftyFity}
+        //   noOfUseHint={noOfUseHint}
+        // />
+        <p>dd</p>
+
+      );
+      // onButtonClick();
+    } else {
+      // Render a countdown
+      return (
+        <span>
+          {hours}:{minutes}:{seconds}
+        </span>
+      );
+    }
+  };
+  // setIfTimesOut(false)
+
+  // )
   return (
     <div className="container">
       <div>
@@ -246,9 +330,30 @@ export default function Quiz() {
               </span>
               <span className="quizBox_hint">{fityFity}</span>
             </p>
-          
+            {/* <CountdownCircleTimer
+              isPlaying
+              duration={3}
+              colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
+              onComplete={setIfTimesOuts }
+              size="120"
+              strokeWidth="4"
+            >
+              <RenderTime />
+              {/* {renderTime} */}
+            {/* </CountdownCircleTimer> */}
+            {/* <Countdown date={Date.now() + 5000} renderer={renderer} /> */}
+            <Countdown date={Date.now() + 5000}>
+              {/* <AlertResult
+                isResultAlert={true}
+                NoOfCorrectAnswer={noOfCorrectAnswer}
+                noOfUseFiftyFity={noOfUseFiftyFity}
+                noOfUseHint={noOfUseHint}
+              /> */}
+              
+            </Countdown>
             <p onClick={onHintClick}>
               <span>
+                {/* hint icon */}
                 <EmojiObjectsIcon htmlColor="orange" />
                 <span className="quizBox_hint">{Hint}</span>
               </span>
@@ -258,24 +363,13 @@ export default function Quiz() {
             <p>
               <span>{currentQuestionIndex + 1} of 15 </span>
             </p>
-            <CountdownCircleTimer
-              isPlaying
-              duration={600}
-              colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
-              // onComplete={setIfTimesOuts }
-              size="120"
-              strokeWidth="4"
-            >
-              <RenderTime noOfCorrectAnswer ={noOfCorrectAnswer} 
-              noOfUseFiftyFity = {noOfUseFiftyFity}
-              noOfUseHint={noOfUseHint}  />
-           </CountdownCircleTimer>
             <p>
               {" "}
-              <span style={{display:'none'}} >
+              <span>
                 <TimerIcon />
               </span>
               <span className="quizBox_hint">
+                 {/* <Countdown date={Date.now() + 3000} renderer={renderer} /> */}
                  </span>
             </p>
           </div>

@@ -7,6 +7,16 @@
     margin: 10px !important; 
   } */
 }
+@media screen and (max-width: 480px) {
+  #toast-container {
+    position: absolute;
+    top: 0px !important;
+    right: auto !important;
+    bottom: 10%;
+    /* left:7%; */
+  }
+}
+
 body {
   background-image: url("https://www.itl.cat/pngfile/big/298-2982444_backgrounds-for-your-computer-or-presentation-planwallpapercom-white.jpg");
   background-repeat: no-repeat;
@@ -85,7 +95,7 @@ body {
   max-width: 900px;
   width: 96%;
   line-height: 0%;
-  align-items: center;
+  /* align-items: center; */
 }
 .quizBox_hint {
   position: relative;
@@ -97,4 +107,11 @@ body {
   justify-content: space-around;
   align-items: center;
   margin-top: 2;
+}
+.toast-correct-answer{
+  background-color: green;
+  
+}
+.toast-wrong-answer{
+  background-color: red;
 }

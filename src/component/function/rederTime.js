@@ -1,5 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
+import AlertResult from "./resultAlert";
+
 const useStyles = makeStyles({
     timer: {
         display: 'flex',
@@ -12,12 +14,19 @@ const useStyles = makeStyles({
         padding:'30px'
     }
   });
-const RenderTime = ({ remainingTime }) => {
-   
+const RenderTime = (props) => {
+   const { remainingTime,noOfCorrectAnswer,noOfUseFiftyFity,noOfUseHint } = props
       const classes = useStyles();
 
     if (remainingTime === 0) {
-      return <div className={classes.timer}>Too lale...</div>;
+      return( <div>
+         <AlertResult
+            isResultAlert={true}
+            NoOfCorrectAnswer={noOfCorrectAnswer}
+            noOfUseFiftyFity={noOfUseFiftyFity}
+            noOfUseHint={noOfUseHint}
+          />
+      </div>);
     }
   
     return (
