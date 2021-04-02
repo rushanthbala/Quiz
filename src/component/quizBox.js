@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactDOM from 'react-dom';
 import Questions from "../api/question.json";
 import M from "materialize-css";
 import "./quizBox.css";
@@ -105,22 +106,11 @@ export default function Quiz() {
     }
   };
   const onHandingClickNext = (e) => {
+    console.log(currentQuestionIndex,'currentQuestionIndex');
     setClickValue(clickValue + 1);
-    var nextQuestion = currentQuestionIndex + 1;
+    var nextQuestion = currentQuestionIndex +1;
     showHiddenOption();
-
     console.log(nextQuestion, "nextQuestion");
-    if (nextQuestion > 14) {
-      console.log("=====================");
-      renderResultAlert();
-    } else {
-      showHiddenOption();
-      console.log("next===", nextQuestion);
-        setTimeout(() => {
-          wrongQuestionSound();
-        }, 200);
-        wrongAnswer();
-      }
       setCurrentQuestionIndex(nextQuestion);
       setCurrentQuestion(question[nextQuestion]);
       setAnswer(question[nextQuestion].answer);
@@ -259,27 +249,35 @@ export default function Quiz() {
   const setIfTimesOuts = () => {
     console.log("sdsd");
     return (
-      <AlertResult
-        isResultAlert={true}
-        NoOfCorrectAnswer={noOfCorrectAnswer}
-        noOfUseFiftyFity={noOfUseFiftyFity}
-        noOfUseHint={noOfUseHint}
-      />
+<div>d</div>
+      // <AlertResult
+      //   isResultAlert={false}
+      //   NoOfCorrectAnswer={noOfCorrectAnswer}
+      //   noOfUseFiftyFity={noOfUseFiftyFity}
+      //   noOfUseHint={noOfUseHint}
+      // />
     );
   };
   const renderer = ({ hours, minutes, seconds, completed }) => {
-    let nextQuestion = currentQuestionIndex + 1
+    // let nextQuestion = currentQuestionIndex + 1
     if (completed) {
+      console.log(122);
+    console.log(currentQuestionIndex,'currentQuestionIndex');
       // onHandingClick()
+      // alert('next Quiz')
+      onHandingClickNext(); 
+
       return (
-        <AlertResult
-          isResultAlert={true}
-          NoOfCorrectAnswer={noOfCorrectAnswer}
-          noOfUseFiftyFity={noOfUseFiftyFity}
-          noOfUseHint={noOfUseHint}
-        />
+        // <AlertResult
+        //   isResultAlert={true}
+        //   NoOfCorrectAnswer={noOfCorrectAnswer}
+        //   noOfUseFiftyFity={noOfUseFiftyFity}
+        //   noOfUseHint={noOfUseHint}
+        // />
+        <p>dd</p>
+
       );
-      onButtonClick();
+      // onButtonClick();
     } else {
       // Render a countdown
       return (
@@ -319,14 +317,15 @@ export default function Quiz() {
               {/* {renderTime} */}
             {/* </CountdownCircleTimer> */}
             {/* <Countdown date={Date.now() + 5000} renderer={renderer} /> */}
-            {/* <Countdown date={Date.now() + 5000}>
-              <AlertResult
+            <Countdown date={Date.now() + 5000}>
+              {/* <AlertResult
                 isResultAlert={true}
                 NoOfCorrectAnswer={noOfCorrectAnswer}
                 noOfUseFiftyFity={noOfUseFiftyFity}
                 noOfUseHint={noOfUseHint}
-              />
-            </Countdown> */}
+              /> */}
+              
+            </Countdown>
             <p onClick={onHintClick}>
               <span>
                 {/* hint icon */}
@@ -344,7 +343,9 @@ export default function Quiz() {
               <span>
                 <TimerIcon />
               </span>
-              <span className="quizBox_hint"> <Countdown date={Date.now() + 3000} renderer={renderer} /></span>
+              <span className="quizBox_hint">
+                 {/* <Countdown date={Date.now() + 3000} renderer={renderer} /> */}
+                 </span>
             </p>
           </div>
           <h2 className="quizBox_question">
