@@ -78,13 +78,10 @@ export default function Quiz() {
   const onHandingClick = (e) => {
     setClickValue(clickValue + 1);
     var nextQuestion = currentQuestionIndex + 1;
-    console.log(nextQuestion, "nextQuestion");
     if (nextQuestion > 14) {
-      console.log("=====================");
       renderResultAlert();
     } else {
       showHiddenOption();
-      console.log("next===", nextQuestion);
       if (e.target.innerHTML === answer) {
         setTimeout(() => {
           correctQuestionSound();
@@ -132,7 +129,6 @@ export default function Quiz() {
           option.innerHTML.toLocaleLowerCase() === answer.toLocaleLowerCase()
         ) {
           correctAnswerIndexNo = i;
-          console.log(correctAnswerIndexNo);
         }
       });
       while (true) {
@@ -144,7 +140,6 @@ export default function Quiz() {
           options.forEach((option, i) => {
             if (i === randomNo) {
               option.style.visibility = "hidden";
-              console.log("claSS ");
               setHint(Hint - 1);
               setPriviosRandomNo(priviosRandomNo.concat(randomNo));
             }
@@ -187,7 +182,6 @@ export default function Quiz() {
                 !randomNos.includes(newRandomNo) &&
                 !randomNos.includes(correctAnswerIndexNo)
               ) {
-                console.log("qsdw");
                 randomNos.push(newRandomNo);
                 count++;
                 break;
